@@ -10,8 +10,9 @@ import SwiftUI
 struct AddNameView: View {
     @Environment(\.dismiss) var dismiss
     
-    @State private var name = "Expense Name"
     @Binding var loadedPhoto: Image?
+    @Binding var profiles: [Profile]
+    
     @State private var personName = ""
     
     let types = ["Business", "Personal"]
@@ -34,11 +35,10 @@ struct AddNameView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        dismiss()
-                    }
-                }
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                        if let loadedPhoto = loadedPhoto {
+                            let newProfile = Profile(photo: loadedPhoto, name: personName, createdAt: Date.now)
+                            profiles.append(newProfile)
+                        }
                         dismiss()
                     }
                 }
@@ -48,5 +48,5 @@ struct AddNameView: View {
 }
 
 #Preview {
-    AddNameView(loadedPhoto: .constant(Image("michael_jackson")))
+    AddNameView(loadedPhoto: .constant(Image("michael_jackson")), profiles: .constant([Profile]()))
 }
