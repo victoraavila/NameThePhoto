@@ -23,9 +23,10 @@ struct ContentView: View {
                     HStack {
                         profile.photo
                             .resizable()
-                            .scaledToFit()
-                            .clipShape(.circle)
-                            .frame(width: 250)
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Circle())
+                            .frame(width: 200, height: 200)
+                            .clipped()
                         
                         Spacer()
                         
@@ -72,7 +73,10 @@ struct ContentView: View {
             }
         }
         
-        return Array(recentProfilesDict.values)
+        // Sort the profiles by name
+        let recentProfiles = Array(recentProfilesDict.values)
+        let sortedProfiles = recentProfiles.sorted { $0.name < $1.name }
+        return sortedProfiles
     }
     
 }
