@@ -21,10 +21,12 @@ struct ContentView: View {
             
             Spacer()
             
-            List {
-                loadedPhoto?
-                    .resizable()
-                    .scaledToFit()
+            if !askForName {
+                List {
+                    loadedPhoto?
+                        .resizable()
+                        .scaledToFit()
+                }
             }
             
             Spacer()
@@ -36,10 +38,11 @@ struct ContentView: View {
     
     func loadImage() {
         Task {
-            loadedPhoto = try await selectedPhoto?.loadTransferable(type: Image.self)
+            if let image = try await selectedPhoto?.loadTransferable(type: Image.self) {
+                loadedPhoto = image
+                askForName = true
+            }
         }
-        
-        askForName = true
     }
 }
 
