@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct Profile: Identifiable {
-    let photo: Image
+struct Profile: Codable, Identifiable {
+    let photo: Data
     let name: String
     let createdAt: Date
     

@@ -5,15 +5,17 @@
 //  Created by Víctor Ávila on 04/08/24.
 //
 
-//import CoreImage
 import PhotosUI
 import SwiftUI
 
 struct ContentView: View {
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var askForName = false
+    @State private var loadedPhotoData = Data()
     @State private var loadedPhoto: Image?
     @State private var profiles = [Profile]()
+    
+    let savePath = URL.documentsDirectory.appending(path: "SavedProfiles")
     
     var body: some View {
         ScrollView {
@@ -21,7 +23,8 @@ struct ContentView: View {
                 let recentProfiles = getMostRecentProfiles()
                 ForEach(recentProfiles) { profile in
                     HStack {
-                        profile.photo
+                        let photo = UIImage(data: profile.photo)
+                        Image(uiImage: (photo ?? UIImage(named: "michael_jackson"))!)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .clipShape(Circle())
@@ -40,27 +43,42 @@ struct ContentView: View {
             
             Spacer()
         }
-            
-        PhotosPicker("Select a Photo", selection: $selectedPhoto)
-            .onChange(of: selectedPhoto, loadImage)
-            
-        
+        .task {
+            loadHistory()
+        }
         .sheet(isPresented: $askForName) {
-            AddNameView(loadedPhoto: $loadedPhoto, profiles: $profiles)
+            AddNameView(loadedPhoto: $loadedPhoto, loadedPhotoData: $loadedPhotoData, profiles: $profiles)
+        }
+        PhotosPicker("Select a Photo", selection: $selectedPhoto)
+            .onChange(of: selectedPhoto) { _, newItem in
+                if let newItem = newItem {
+                    loadImage(newItem: newItem)
+                }
+            }
+    }
+    
+    func loadHistory() {
+        do {
+            let data = try Data(contentsOf: savePath)
+            profiles = try JSONDecoder().decode([Profile].self, from: data)
+        } catch {
+            profiles = []
         }
     }
     
-    func loadImage() {
+    func loadImage(newItem: PhotosPickerItem) {
         Task {
-            if let image = try await selectedPhoto?.loadTransferable(type: Image.self) {
-                loadedPhoto = image
+            if let loadedPhotoData = try await newItem.loadTransferable(type: Data.self) {
+                self.loadedPhotoData = loadedPhotoData
+                if let uiImage = UIImage(data: loadedPhotoData) {
+                    loadedPhoto = Image(uiImage: uiImage)
+                }
                 askForName = true
             }
         }
     }
     
     func getMostRecentProfiles() -> [Profile] {
-        // Dictionary to hold the most recent profile for each name
         var recentProfilesDict = [String: Profile]()
         
         for profile in profiles {
@@ -73,14 +91,13 @@ struct ContentView: View {
             }
         }
         
-        // Sort the profiles by name
         let recentProfiles = Array(recentProfilesDict.values)
         let sortedProfiles = recentProfiles.sorted { $0.name < $1.name }
         return sortedProfiles
     }
-    
 }
 
 #Preview {
     ContentView()
 }
+
