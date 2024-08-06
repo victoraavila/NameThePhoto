@@ -25,7 +25,7 @@ struct ContentView: View {
                         let recentProfiles = getMostRecentProfiles()
                         ForEach(recentProfiles.indices, id: \.self) { index in
                             let profile = recentProfiles[index]
-                            NavigationLink(destination: DetailView(profiles: $profiles, profileIndex: index)) {
+                            NavigationLink(destination: DetailView(profiles: $profiles, profileName: profile.name)) {
                                 HStack {
                                     let photo = UIImage(data: profile.photo)
                                     Image(uiImage: (photo ?? UIImage(named: "michael_jackson"))!)

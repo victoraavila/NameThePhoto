@@ -9,13 +9,12 @@ import SwiftUI
 
 struct DetailView: View {
     @Binding var profiles: [Profile]
-    var profileIndex: Int
+    var profileName: String
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         NavigationStack {
-            if profiles.count > 0 {
-                let profile = profiles[profileIndex]
+            if let profile = profiles.first(where: { $0.name == profileName }) {
                 let photo = UIImage(data: profile.photo)
                 Image(uiImage: (photo ?? UIImage(named: "michael_jackson"))!)
                     .resizable()
@@ -28,21 +27,27 @@ struct DetailView: View {
                     .italic()
                 
                 Spacer()
+            } else {
+                Text("Profile not found")
+                    .font(.title)
+                Spacer()
             }
         }
         .toolbar {
             ToolbarItem {
                 Button("Delete profile", systemImage: "trash", role: .destructive) {
-                    deleteProfile()
                     presentationMode.wrappedValue.dismiss()
+                    deleteProfile()
                 }
             }
         }
     }
     
     func deleteProfile() {
-        profiles.remove(at: profileIndex)
-        saveHistory()
+        if let profileIndex = profiles.firstIndex(where: { $0.name == profileName }) {
+            profiles.remove(at: profileIndex)
+            saveHistory()
+        }
     }
     
     func saveHistory() {
@@ -60,5 +65,5 @@ struct DetailView: View {
     DetailView(profiles: .constant([Profile(photo: UIImage(named: "michael_jackson")!.pngData()!,
                                             name: "Michael Jackson",
                                             createdAt: Date.now)]),
-               profileIndex: 0)
+               profileName: "Michael Jackson")
 }
