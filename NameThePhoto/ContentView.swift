@@ -18,48 +18,55 @@ struct ContentView: View {
     let savePath = URL.documentsDirectory.appending(path: "SavedProfiles")
     
     var body: some View {
-        ScrollView {
-            if !askForName {
-                let recentProfiles = getMostRecentProfiles()
-                ForEach(recentProfiles.indices, id: \.self) { index in
-                    HStack {
-                        let profile = recentProfiles[index]
-                        let photo = UIImage(data: profile.photo)
-                        Image(uiImage: (photo ?? UIImage(named: "michael_jackson"))!)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                            .frame(width: 200, height: 200)
-                            .clipped()
-                        
-                        Spacer()
-                        
-                        Text(profile.name)
-                        
-                        Spacer()
+        NavigationView {
+            VStack {
+                ScrollView {
+                    if !askForName {
+                        let recentProfiles = getMostRecentProfiles()
+                        ForEach(recentProfiles.indices, id: \.self) { index in
+                            let profile = recentProfiles[index]
+                            NavigationLink(destination: DetailView(profiles: $profiles, profileIndex: index)) {
+                                HStack {
+                                    let photo = UIImage(data: profile.photo)
+                                    Image(uiImage: (photo ?? UIImage(named: "michael_jackson"))!)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .clipShape(Circle())
+                                        .frame(width: 200, height: 200)
+                                        .clipped()
+                                    
+                                    Spacer()
+                                    
+                                    Text(profile.name)
+                                    
+                                    Spacer()
+                                }
+                                .padding()
+                            }
+                            
+                            
+                            if index < recentProfiles.count - 1 {
+                                CustomDividerView()
+                            }
+                        }
                     }
-                    .padding()
                     
-                    if index < recentProfiles.count - 1 {
-                        CustomDividerView()
+                    Spacer()
+                }
+                PhotosPicker("Select a Photo", selection: $selectedPhoto)
+                    .onChange(of: selectedPhoto) { _, newItem in
+                        if let newItem = newItem {
+                            loadImage(newItem: newItem)
+                        }
                     }
-                }
             }
-            
-            Spacer()
-        }
-        .task {
-            loadHistory()
-        }
-        .sheet(isPresented: $askForName) {
-            AddNameView(loadedPhoto: $loadedPhoto, loadedPhotoData: $loadedPhotoData, profiles: $profiles)
-        }
-        PhotosPicker("Select a Photo", selection: $selectedPhoto)
-            .onChange(of: selectedPhoto) { _, newItem in
-                if let newItem = newItem {
-                    loadImage(newItem: newItem)
-                }
+            .task {
+                loadHistory()
             }
+            .sheet(isPresented: $askForName) {
+                AddNameView(loadedPhoto: $loadedPhoto, loadedPhotoData: $loadedPhotoData, profiles: $profiles)
+            }
+        }
     }
     
     func loadHistory() {
