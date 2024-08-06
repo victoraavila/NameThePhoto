@@ -21,9 +21,6 @@ struct DetailView: View {
                         .resizable()
                         .scaledToFit()
                     
-                    Text(profile.name)
-                        .font(.title)
-                    
                     Text("(Photo taken at \(profile.createdAt.formatted()))")
                         .italic()
                 } else {
@@ -37,8 +34,10 @@ struct DetailView: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 HStack {
-                    Text("Profile Details")
-                        .font(.headline)
+                    if let profile = profiles.first(where: { $0.name == profileName }) {
+                        Text("\(profile.name)")
+                            .font(.headline)
+                    }
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {

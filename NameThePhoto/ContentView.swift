@@ -53,7 +53,7 @@ struct ContentView: View {
                     
                     Spacer()
                 }
-                PhotosPicker(selection: $selectedPhoto) {
+                PhotosPicker(selection: $selectedPhoto, matching: .images) {
                     VStack {
                         Image(systemName: "photo.badge.plus")
                             .padding(5)
