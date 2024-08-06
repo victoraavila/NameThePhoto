@@ -53,7 +53,17 @@ struct ContentView: View {
                     
                     Spacer()
                 }
-                PhotosPicker("Select a Photo", selection: $selectedPhoto)
+                PhotosPicker(selection: $selectedPhoto) {
+                    VStack {
+                        Image(systemName: "photo.badge.plus")
+                            .padding(5)
+                            .font(.title)
+                        Text("Tap to add a new person")
+                            
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(Color.gray.opacity(0.2))
+                }
                     .onChange(of: selectedPhoto) { _, newItem in
                         if let newItem = newItem {
                             loadImage(newItem: newItem)
@@ -86,6 +96,7 @@ struct ContentView: View {
                     loadedPhoto = Image(uiImage: uiImage)
                 }
                 askForName = true
+                selectedPhoto = nil
             }
         }
     }
