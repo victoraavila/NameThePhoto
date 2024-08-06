@@ -21,8 +21,9 @@ struct ContentView: View {
         ScrollView {
             if !askForName {
                 let recentProfiles = getMostRecentProfiles()
-                ForEach(recentProfiles) { profile in
+                ForEach(recentProfiles.indices, id: \.self) { index in
                     HStack {
+                        let profile = recentProfiles[index]
                         let photo = UIImage(data: profile.photo)
                         Image(uiImage: (photo ?? UIImage(named: "michael_jackson"))!)
                             .resizable()
@@ -38,6 +39,10 @@ struct ContentView: View {
                         Spacer()
                     }
                     .padding()
+                    
+                    if index < recentProfiles.count - 1 {
+                        CustomDividerView()
+                    }
                 }
             }
             

@@ -13,6 +13,7 @@
 		96220AA02C6072DA00FDFCB4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96220A9F2C6072DA00FDFCB4 /* Preview Assets.xcassets */; };
 		96220AA72C607A9700FDFCB4 /* AddNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96220AA62C607A9700FDFCB4 /* AddNameView.swift */; };
 		96220AA92C60850E00FDFCB4 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96220AA82C60850D00FDFCB4 /* Profile.swift */; };
+		965220D72C61C6F700BF868D /* CustomDividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965220D62C61C6F700BF868D /* CustomDividerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		96220A9F2C6072DA00FDFCB4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		96220AA62C607A9700FDFCB4 /* AddNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNameView.swift; sourceTree = "<group>"; };
 		96220AA82C60850D00FDFCB4 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		965220D62C61C6F700BF868D /* CustomDividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDividerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +41,7 @@
 		96220A8C2C6072D800FDFCB4 = {
 			isa = PBXGroup;
 			children = (
+				965220D62C61C6F700BF868D /* CustomDividerView.swift */,
 				96220AA82C60850D00FDFCB4 /* Profile.swift */,
 				96220AA62C607A9700FDFCB4 /* AddNameView.swift */,
 				96220A972C6072D800FDFCB4 /* NameThePhoto */,
@@ -144,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96220A9B2C6072D800FDFCB4 /* ContentView.swift in Sources */,
+				965220D72C61C6F700BF868D /* CustomDividerView.swift in Sources */,
 				96220AA92C60850E00FDFCB4 /* Profile.swift in Sources */,
 				96220A992C6072D800FDFCB4 /* NameThePhotoApp.swift in Sources */,
 				96220AA72C607A9700FDFCB4 /* AddNameView.swift in Sources */,
