@@ -36,14 +36,25 @@ struct AddNameView: View {
                     Button("Save") {
                         if loadedPhoto != nil {
                             let newProfile = Profile(photo: loadedPhotoData, name: personName, createdAt: Date.now)
-                            profiles.append(newProfile)
-                            saveHistory()
+                            saveProfile(newProfile)
                         }
                         dismiss()
                     }
                 }
             }
         }
+    }
+    
+    func saveProfile(_ newProfile: Profile) {
+        // Check if a profile with the same name already exists
+        if let existingIndex = profiles.firstIndex(where: { $0.name == newProfile.name }) {
+            // If it exists, remove the old profile
+            profiles.remove(at: existingIndex)
+        }
+        
+        // Add the new profile
+        profiles.append(newProfile)
+        saveHistory()
     }
     
     func saveHistory() {
