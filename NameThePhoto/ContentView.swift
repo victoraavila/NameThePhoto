@@ -22,9 +22,9 @@ struct ContentView: View {
             VStack {
                 ScrollView {
                     if !askForName {
-                        let recentProfiles = getMostRecentProfiles()
-                        ForEach(recentProfiles.indices, id: \.self) { index in
-                            let profile = recentProfiles[index]
+                        let sortedProfiles = sortProfiles()
+                        ForEach(sortedProfiles.indices, id: \.self) { index in
+                            let profile = sortedProfiles[index]
                             NavigationLink(destination: DetailView(profiles: $profiles, profileName: profile.name)) {
                                 HStack {
                                     let photo = UIImage(data: profile.photo)
@@ -45,7 +45,7 @@ struct ContentView: View {
                             }
                             
                             
-                            if index < recentProfiles.count - 1 {
+                            if index < sortedProfiles.count - 1 {
                                 CustomDividerView()
                             }
                         }
@@ -101,22 +101,8 @@ struct ContentView: View {
         }
     }
     
-    func getMostRecentProfiles() -> [Profile] {
-        var recentProfilesDict = [String: Profile]()
-        
-        for profile in profiles {
-            if let existingProfile = recentProfilesDict[profile.name] {
-                if profile.createdAt > existingProfile.createdAt {
-                    recentProfilesDict[profile.name] = profile
-                }
-            } else {
-                recentProfilesDict[profile.name] = profile
-            }
-        }
-        
-        let recentProfiles = Array(recentProfilesDict.values)
-        let sortedProfiles = recentProfiles.sorted { $0.name < $1.name }
-        return sortedProfiles
+    func sortProfiles() -> [Profile] {
+        profiles.sorted { $0.name < $1.name }
     }
 }
 
