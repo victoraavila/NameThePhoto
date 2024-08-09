@@ -13,6 +13,8 @@ struct DetailView: View {
     var profileName: String
     @Environment(\.dismiss) var dismiss
     
+    @State private var cityName: String = "Unknownland"
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -37,7 +39,7 @@ struct DetailView: View {
                             .fontWeight(.bold)
                             .symbolRenderingMode(.multicolor)
                         
-                        Text("Uberlândia, Minas Gerais, Brazil") //
+                        Text(cityName)
                             .italic()
                     }
                     
@@ -46,7 +48,9 @@ struct DetailView: View {
                                            span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
                     )
                     
-                    Map(initialPosition: position, interactionModes: [])
+                    Map(initialPosition: position, interactionModes: []) {
+                        Marker("", coordinate: profile.location)
+                    }
                         .frame(height: 200)
                     
                 } else {
@@ -74,6 +78,24 @@ struct DetailView: View {
                     Image(systemName: "trash")
                         .foregroundColor(.red)
                 }
+            }
+        }
+        .onAppear {
+            if let profile = profiles.first(where: {$0.name == profileName }) {
+                fetchCityName(for: profile.location)
+            }
+        }
+    }
+    
+    func fetchCityName(for location: CLLocationCoordinate2D) {
+        let geocoder = CLGeocoder()
+        let clLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+        
+        geocoder.reverseGeocodeLocation(clLocation) { placemarks, error in
+            if let placemark = placemarks?.first, error == nil {
+                cityName = placemark.locality ?? "Unknownland 2"
+            } else {
+                cityName = "Unknownland 3"
             }
         }
     }
