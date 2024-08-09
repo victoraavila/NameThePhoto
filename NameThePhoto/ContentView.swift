@@ -18,7 +18,7 @@ struct ContentView: View {
     let savePath = URL.documentsDirectory.appending(path: "SavedProfiles")
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 ScrollView {
                     if !askForName {
