@@ -42,6 +42,7 @@ struct DetailView: View {
                         Text(cityName)
                             .italic()
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     
                     let position = MapCameraPosition.region(
                         MKCoordinateRegion(center: profile.location,
@@ -49,7 +50,18 @@ struct DetailView: View {
                     )
                     
                     Map(initialPosition: position, interactionModes: []) {
-                        Marker("", coordinate: profile.location)
+                        Annotation("", coordinate: CLLocationCoordinate2D(latitude: profile.location.latitude + 0.075, longitude: profile.location.longitude)) {
+                            Image(systemName: "mappin")
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .symbolRenderingMode(.multicolor)
+                                .shadow(
+                                        color: Color.black.opacity(0.8), // shadow color
+                                        radius: 5, // shadow radius
+                                        x: 0, // x offset
+                                        y: 2 // y offset
+                                    )
+                        }
                     }
                         .frame(height: 200)
                     
