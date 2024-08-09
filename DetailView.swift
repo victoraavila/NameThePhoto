@@ -5,12 +5,13 @@
 //  Created by Víctor Ávila on 06/08/24.
 //
 
+import MapKit
 import SwiftUI
 
 struct DetailView: View {
     @Binding var profiles: [Profile]
     var profileName: String
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ScrollView {
@@ -21,8 +22,33 @@ struct DetailView: View {
                         .resizable()
                         .scaledToFit()
                     
-                    Text("(Photo taken at \(profile.createdAt.formatted()))")
-                        .italic()
+                    HStack {
+                        Image(systemName: "clock")
+                            .fontWeight(.bold)
+                            .symbolRenderingMode(.multicolor)
+                        
+                        Text("Taken at \(profile.createdAt.formatted())")
+                            .italic()
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    HStack {
+                        Image(systemName: "mappin")
+                            .fontWeight(.bold)
+                            .symbolRenderingMode(.multicolor)
+                        
+                        Text("Uberlândia, Minas Gerais, Brazil") //
+                            .italic()
+                    }
+                    
+                    let position = MapCameraPosition.region(
+                        MKCoordinateRegion(center: profile.location,
+                                           span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
+                    )
+                    
+                    Map(initialPosition: position, interactionModes: [])
+                        .frame(height: 200)
+                    
                 } else {
                     Text("Profile not found")
                         .font(.title)
@@ -43,7 +69,7 @@ struct DetailView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
                     deleteProfile()
-                    presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 }) {
                     Image(systemName: "trash")
                         .foregroundColor(.red)
@@ -73,7 +99,8 @@ struct DetailView: View {
 #Preview {
     DetailView(profiles: .constant([Profile(photo: UIImage(named: "michael_jackson")!.pngData()!,
                                             name: "Michael Jackson",
-                                            createdAt: Date.now)]),
+                                            createdAt: Date.now,
+                                            location: CLLocationCoordinate2D(latitude: Double.random(in: -90...90), longitude: Double.random(in: -180...180)))]),
                profileName: "Michael Jackson")
 }
 

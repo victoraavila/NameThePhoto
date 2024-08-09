@@ -5,6 +5,7 @@
 //  Created by Víctor Ávila on 05/08/24.
 //
 
+import MapKit
 import SwiftUI
 
 struct AddNameView: View {
@@ -15,6 +16,8 @@ struct AddNameView: View {
     @Binding var profiles: [Profile]
     
     @State private var personName = ""
+    
+    let locationFetcher = LocationFetcher()
     
     var body: some View {
         NavigationStack {
@@ -35,7 +38,11 @@ struct AddNameView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         if loadedPhoto != nil {
-                            let newProfile = Profile(photo: loadedPhotoData, name: personName, createdAt: Date.now)
+                            locationFetcher.start()
+                            let newProfile = Profile(photo: loadedPhotoData,
+                                                     name: personName,
+                                                     createdAt: Date.now,
+                                                     location: locationFetcher.lastKnownLocation ?? CLLocationCoordinate2D(latitude: Double.random(in: -90...90), longitude: Double.random(in: -180...180)))
                             saveProfile(newProfile)
                         }
                         dismiss()
